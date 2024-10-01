@@ -4,7 +4,7 @@ import openai
 import os
 from dotenv import load_dotenv
 from flask_wtf.csrf import CSRFProtect
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -19,11 +19,11 @@ mongo_uri = os.getenv('MONGO_URI')
 app.config['SECRET_KEY'] = 'supersecretkey'
 
 # Initialize CSRF protection
-# csrf = CSRFProtect(app)
+csrf = CSRFProtect(app)
 # CORS(app, resources={r"/ask": {"origins": "http://62.72.7.64/"}})
 
 # Enable CORS (Cross-Origin Resource Sharing)
-# CORS(app)
+CORS(app)
 
 
 class StockChatbot:
@@ -67,7 +67,6 @@ def index():
 
 # API route to handle user queries
 @app.route('/ask', methods=['POST'])
-@cross_origin(origin="*")
 def ask():
     try:
         user_input = request.json.get("user_input", "")

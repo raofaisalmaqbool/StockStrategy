@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Market Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .chatbox {
+            width: 500px;
+            margin: 0 auto;
+        }
+        input[type="text"], input[type="submit"] {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px;
+        }
+        input[type="text"] {
+            width: 70%;
+        }
+        .response {
+            background-color: #fff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="chatbox">
+    <h1>Chat with Stock Market Bot</h1>
+    <form id="chat-form">
+        <input type="text" id="user_input" placeholder="Ask a question about stocks..." required>
+        <input type="submit" value="Send">
+    </form>
+
+    <div class="response" id="response"></div>
+</div>
+
+<script>
+    document.getElementById("chat-form").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const userInput = document.getElementById("user_input").value;
+
+        fetch('/ask', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ user_input: userInput }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                document.getElementById("response").innerHTML = `<p>Error: ${data.error}</p>`;
+            } else {
+                document.getElementById("response").innerHTML = `<p>Response: ${data.response}</p>`;
+                
+                // If the response is "Goodbye!", disable the form
+                if (data.response.toLowerCase() === "goodbye!") {
+                    document.getElementById("user_input").disabled = true;
+                    document.querySelector('input[type="submit"]').disabled = true;
+                }
+            }
+        })
+        .catch(error => {
+            document.getElementById("response").innerHTML = `<p>Error: ${error.message}</p>`;
+        });
+
+        document.getElementById("user_input").value = ''; // Clear input after sending
+    });
+</script>
+
+</body>
+</html>
+

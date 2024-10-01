@@ -38,6 +38,7 @@
     <h1>Chat with Stock Market Bot</h1>
     <form id="chat-form">
         <input type="text" id="user_input" placeholder="Ask a question about stocks..." required>
+        <input type="hidden" id="csrf_token" value="{{ csrf_token() }}"> <!-- Add CSRF token -->
         <input type="submit" value="Send">
     </form>
 
@@ -48,21 +49,28 @@
     document.getElementById("chat-form").addEventListener("submit", function(e) {
         e.preventDefault();
         const userInput = document.getElementById("user_input").value;
+        const csrfToken = document.getElementById("csrf_token").value;  // Get the CSRF token
 
         fetch('/ask', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken  // Include CSRF token in the headers
             },
             body: JSON.stringify({ user_input: userInput }),
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("HTTP error " + response.status);
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.error) {
                 document.getElementById("response").innerHTML = `<p>Error: ${data.error}</p>`;
             } else {
                 document.getElementById("response").innerHTML = `<p>Response: ${data.response}</p>`;
-                
+
                 // If the response is "Goodbye!", disable the form
                 if (data.response.toLowerCase() === "goodbye!") {
                     document.getElementById("user_input").disabled = true;
@@ -80,4 +88,3 @@
 
 </body>
 </html>
-

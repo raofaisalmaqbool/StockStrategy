@@ -3,6 +3,8 @@ from pymongo import MongoClient
 import openai
 import os
 from dotenv import load_dotenv
+from flask_wtf.csrf import CSRFProtect
+from flask_cors import CORS
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -12,6 +14,16 @@ app = Flask(__name__)
 # Set up OpenAI API Key and MongoDB URI from .env
 openai.api_key = os.getenv('OPENAI_API_KEY')
 mongo_uri = os.getenv('MONGO_URI')
+
+# Secret key for CSRF protection (you can generate a random key)
+app.config['SECRET_KEY'] = 'supersecretkey'
+
+# Initialize CSRF protection
+csrf = CSRFProtect(app)
+CORS(app, resources={r"/ask": {"origins": "http://62.72.7.64/"}})
+
+# Enable CORS (Cross-Origin Resource Sharing)
+CORS(app)
 
 
 class StockChatbot:
@@ -70,11 +82,10 @@ def ask():
 
         # Get GPT-4's response using MongoDB data
         response = chatbot.ask_gpt4o(user_input, mongo_data)
-
         return jsonify({"response": response}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=4000)

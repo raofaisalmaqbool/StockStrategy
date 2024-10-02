@@ -35,7 +35,7 @@
 <body>
 
 <div class="chatbox">
-    <h1>Chat with Stock Market Bot...</h1>
+    <h1>Chat with Stock Market Bot..1</h1>
     <form id="chat-form">
         <input type="text" id="user_input" placeholder="Ask a question about stocks..." required>
         <input type="hidden" id="csrf_token" value="{{ csrf_token() }}"> <!-- Add CSRF token -->
@@ -52,12 +52,12 @@
         const csrfToken = document.getElementById("csrf_token").value;  // Get the CSRF token
 
         fetch('/ask', {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken  // Include CSRF token in the headers
+                {#'X-CSRFToken': csrfToken  // Include CSRF token in the headers#}
             },
-            body: JSON.stringify({ user_input: userInput }),
+            {#body: JSON.stringify({ user_input: userInput }),#}
         })
         .then(response => {
             if (!response.ok) {

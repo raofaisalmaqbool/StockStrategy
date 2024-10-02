@@ -4,7 +4,7 @@ import openai
 import os
 from dotenv import load_dotenv
 from flask_wtf.csrf import CSRFProtect
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -67,6 +67,7 @@ def index():
 
 # API route to handle user queries
 @app.route('/ask', methods=['POST'])
+@cross_origin(origin="*", headers=["Content- Type", "application/json"])
 def ask():
     try:
         user_input = request.json.get("user_input", "")

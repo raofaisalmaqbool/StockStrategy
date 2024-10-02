@@ -23,7 +23,7 @@ csrf = CSRFProtect(app)
 # CORS(app, resources={r"/ask": {"origins": "http://62.72.7.64/"}})
 
 # Enable CORS (Cross-Origin Resource Sharing)
-CORS(app)
+# CORS(app)
 
 
 class StockChatbot:

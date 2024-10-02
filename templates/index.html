@@ -51,7 +51,7 @@
         const userInput = document.getElementById("user_input").value;
         const csrfToken = document.getElementById("csrf_token").value;  // Get the CSRF token
 
-        fetch('/ask', {
+        fetch('/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

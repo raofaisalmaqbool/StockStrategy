@@ -60,34 +60,30 @@ chatbot = StockChatbot(mongo_uri)
 
 
 # Route for the home page
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
-
-
-# API route to handle user queries
-@app.route('/ask', methods=['GET'])
-@cross_origin(origin="*")
-def ask():
-    try:
-        return jsonify({"response": "Goodbye!"}), 200
-
-        user_input = request.json.get("user_input", "")
-        if not user_input:
-            return jsonify({"error": "User input is required"}), 400
-
-        # Check if user wants to exit
-        if user_input.lower() == "exit":
+    if request.method == 'GET':
+        return render_template('index.html')
+    else:
+        try:
             return jsonify({"response": "Goodbye!"}), 200
 
-        # Fetch data from MongoDB
-        mongo_data = chatbot.get_data_from_mongo(user_input)
+            user_input = request.json.get("user_input", "")
+            if not user_input:
+                return jsonify({"error": "User input is required"}), 400
 
-        # Get GPT-4's response using MongoDB data
-        response = chatbot.ask_gpt4o(user_input, mongo_data)
-        return jsonify({"response": response}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+            # Check if user wants to exit
+            if user_input.lower() == "exit":
+                return jsonify({"response": "Goodbye!"}), 200
+
+            # Fetch data from MongoDB
+            mongo_data = chatbot.get_data_from_mongo(user_input)
+
+            # Get GPT-4's response using MongoDB data
+            response = chatbot.ask_gpt4o(user_input, mongo_data)
+            return jsonify({"response": response}), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
 
 
 if __name__ == '__main__':

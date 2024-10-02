@@ -65,7 +65,7 @@ chatbot = StockChatbot(mongo_uri)
 def index():
     if request.method == 'GET':
         return render_template('index.html')
-    else:
+    if request.method == 'POST':
         try:
             user_input = request.json.get("user_input", "")
             if not user_input:
@@ -83,6 +83,8 @@ def index():
             return jsonify({"response": response}), 200
         except Exception as e:
             return jsonify({"error": str(e)}), 500
+    else:
+        return render_template('index.html')
 
 
 if __name__ == '__main__':

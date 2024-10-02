@@ -61,13 +61,12 @@ chatbot = StockChatbot(mongo_uri)
 
 # Route for the home page
 @app.route('/', methods=['GET', 'POST'])
+@cross_origin(origin="*", headers=["Content- Type", "application/json"])
 def index():
     if request.method == 'GET':
         return render_template('index.html')
     else:
         try:
-            return jsonify({"response": "Goodbye!"}), 200
-
             user_input = request.json.get("user_input", "")
             if not user_input:
                 return jsonify({"error": "User input is required"}), 400

@@ -71,11 +71,7 @@
             } else {
                 document.getElementById("response").innerHTML = `<p>Response: ${data.response}</p>`;
 
-                // If the response is "Goodbye!", disable the form
-                if (data.response.toLowerCase() === "goodbye!") {
-                    document.getElementById("user_input").disabled = true;
-                    document.querySelector('input[type="submit"]').disabled = true;
-                }
+
             }
         })
         .catch(error => {

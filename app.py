@@ -66,10 +66,12 @@ def index():
 
 
 # API route to handle user queries
-@app.route('/ask', methods=['POST'])
-@cross_origin(origin="*", headers=["Content- Type", "application/json"])
+@app.route('/ask', methods=['GET'])
+@cross_origin(origin="*")
 def ask():
     try:
+        return jsonify({"response": "Goodbye!"}), 200
+
         user_input = request.json.get("user_input", "")
         if not user_input:
             return jsonify({"error": "User input is required"}), 400
